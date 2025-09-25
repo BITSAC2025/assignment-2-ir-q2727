@@ -29,23 +29,16 @@ int main(int argc, char** argv)
 
     moduleNameVec = OptionBase::parseOptions(arg_num, arg_value, "SVF IR", "[options] <input-bitcode...>");
 
-    LLVMModuleSet::buildSVFModule(moduleNameVec);
+    LLVMModuleSet::getLLVMModuleSet()->buildSVFModule(moduleNameVec);
 
+    // Instantiate an SVFIR builder
     SVFIRBuilder builder;
     cout << "Generating SVFIR(PAG), call graph and ICFG ..." << endl;
 
-    // TODO: here, generate SVFIR(PAG), call graph and ICFG to files
+    // TODO: here, generate SVFIR(PAG), call graph and ICFG, and dump them to files
     //@{
-    auto pag = builder.build();
-    pag->dump();
 
-    auto cg = pag->getCallGraph();
-    cg->dump();
-
-    auto icfg = pag->getICFG();
-    icfg->dump();
     //@}
 
-    LLVMModuleSet::releaseLLVMModuleSet();
-	return 0;
+    return 0;
 }
