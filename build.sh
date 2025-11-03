@@ -1,8 +1,10 @@
 #!/bin/bash
+set -e
 
 ARGS="$@"
 
 rm -rf build/
+mkdir -p build
 
 mkdir build && cd build/
 

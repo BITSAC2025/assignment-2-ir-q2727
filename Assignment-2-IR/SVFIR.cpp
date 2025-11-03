@@ -5,6 +5,8 @@
 
 #include "Graphs/SVFG.h"
 #include "SVF-LLVM/SVFIRBuilder.h"
+#include <Graphs/CallGraph.h>
+#include <string>
 
 using namespace SVF;
 using namespace llvm;
@@ -36,9 +38,14 @@ int main(int argc, char** argv)
     cout << "Generating SVFIR(PAG), call graph and ICFG ..." << endl;
 
     // TODO: here, generate SVFIR(PAG), call graph and ICFG, and dump them to files
-    //@{
+    SVFIR* pag = builder.build();
 
-    //@}
+    CallGraph* cg = pag->getCallGraph();
+    ICFG* icfg = pag->getICFG();
+
+    pag->dump("pag");
+    cg->dump("callgraph");
+    icfg->dump("icfg");
 
     return 0;
 }
