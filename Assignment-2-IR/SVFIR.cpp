@@ -5,6 +5,8 @@
 
 #include "Graphs/SVFG.h"
 #include "SVF-LLVM/SVFIRBuilder.h"
+#include "llvm/ADT/SmallString.h"
+#include "llvm/Support/Path.h"
 
 using namespace SVF;
 using namespace llvm;
@@ -38,11 +40,25 @@ int main(int argc, char** argv)
     // TODO: here, generate SVFIR(PAG), call graph and ICFG, and dump them to files
     //@{
     SVFIR* pag = builder.build();
-    pag->dump("");
+    assert(pag && "Failed to build SVFIR");
+
+    // Use the first input module name to decide where the .dot files go.
+    llvm::SmallString<256> outputPrefix;
+    if (!moduleNameVec.empty()) {
+        outputPrefix = moduleNameVec.front();
+        llvm::sys::path::remove_dots(outputPrefix, true);
+        llvm::sys::path::replace_extension(outputPrefix, "");
+    }
+    if (outputPrefix.empty())
+        outputPrefix = "svfir-output";
+
+    const std::string baseName = std::string(outputPrefix.str());
+
+    pag->dump(baseName + ".pag");
     CallGraph* callgraph = pag->getCallGraph();
-    callgraph->dump("");
+    callgraph->dump(baseName + ".callgraph");
     ICFG* icfg = pag->getICFG();
-    icfg->dump("");
+    icfg->dump(baseName + ".icfg");
     //@}
 
     return 0;
