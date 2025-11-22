@@ -6,7 +6,6 @@
 #include "Graphs/SVFG.h"
 #include "Graphs/CallGraph.h"
 #include "SVF-LLVM/SVFIRBuilder.h"
-#include "llvm/Support/Path.h"
 
 using namespace SVF;
 using namespace llvm;
@@ -42,15 +41,11 @@ int main(int argc, char** argv)
     SVFIR* pag = builder.build();
     assert(pag && "Failed to build SVFIR");
 
-    std::string baseName = "svfir-output";
-    if (!moduleNameVec.empty())
-        baseName = llvm::sys::path::filename(moduleNameVec.front()).str();
-
-    pag->dump(baseName + ".pag");
+    pag->dump();
     CallGraph* callgraph = const_cast<CallGraph*>(pag->getCallGraph());
-    callgraph->dump(baseName + ".cg");
+    callgraph->dump();
     ICFG* icfg = pag->getICFG();
-    icfg->dump(baseName + ".icfg");
+    icfg->dump();
     //@}
 
     return 0;
